@@ -1,0 +1,5 @@
+[06-Jun-2017 17:26:49 America/Chicago] PHP Fatal error:  Call to undefined function get_header() in /home/vgresiduos/public_html/wp-content/themes/JointsWP-CSS-master/index.php on line 1
+[03-Jul-2017 11:57:10 America/Chicago] PHP Fatal error:  Call to undefined function get_header() in /home/vgresiduos/public_html/wp-content/themes/JointsWP-CSS-master/index.php on line 1
+[23-Nov-2017 14:52:11 America/Chicago] PHP Fatal error:  Call to undefined function get_header() in /home/vgresiduos/public_html/wp-content/themes/vg-residuos/index.php on line 1
+[14-Dec-2017 02:54:09 America/Chicago] PHP Fatal error:  Call to undefined function get_header() in /home/vgresiduos/public_html/wp-content/themes/vg-residuos/index.php on line 1
+[14-Dec-2017 02:54:21 America/Chicago] PHP Fatal error:  Call to undefined function get_header() in /home/vgresiduos/public_html/wp-content/themes/vg-residuos/index.php on line 1

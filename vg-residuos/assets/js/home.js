@@ -1,0 +1,180 @@
+/* jQuery.ajax({
+	url: 'https://apiv2.vgresiduos.com.br/api/ResidueResource/GetDefaultResidueList',
+	type: 'POST',
+	headers: {'X-Requested-With': 'XMLHttpRequest'},
+	contentType: 'application/json; charset=utf-8',
+	Authorization:'Basic cmZlcnJlaXJhQHZlcmRlZ2hhaWEuY29tLmJyOkAxMjNtdWRhcg==',
+	success: function (result) {
+	jQuery.each(result.content.list, function(i, item){		
+		jQuery('#residuo').append(jQuery('<ul><li>', {
+			value: item.ID,
+			text : item.Description,
+			var : availableTags = [
+				result
+			  ],
+			  
+		}));
+	});
+	}			
+}); */
+
+jQuery( function() {
+	var suggestions = [];
+	jQuery.ajax({
+		url: 'https://apiv2.vgresiduos.com.br/api/ResidueResource/GetDefaultResidueList',
+		type: 'POST',
+		headers: {'X-Requested-With': 'XMLHttpRequest'},
+		contentType: 'application/json; charset=utf-8',
+		Authorization:'Basic cmZlcnJlaXJhQHZlcmRlZ2hhaWEuY29tLmJyOkAxMjNtdWRhcg==',
+		success: function (result) {
+		jQuery.each(result.content.list, function(i, item){		
+			suggestions.push({
+				label: item.Description,
+				id: item.ID
+			});				  			
+		});
+		}
+	});
+
+    jQuery( "#residuo" ).autocomplete({
+		minLength: 3,
+		//source
+		source: suggestions,
+		//select
+		select: function(e, ui) {
+			jQuery("#idresiduo").val(ui.item.id);			
+		}
+    });
+} );
+
+function redirect_gerador(){
+	var name = jQuery('#nome').val();
+	var email =  jQuery('#e-mail').val();
+	var idresiduo = jQuery('#idresiduo').val();
+	var quant = jQuery('#quantidade').val();
+	var estadoGerador = jQuery('#estado_gerador').val();
+	var cidadeGerador = jQuery('#cidade_gerador').val();
+	var enderecoGerador = jQuery('#endereco_gerador').val();
+	var cnpjGerador = jQuery('#cnpj_gerador').val();
+
+	alert("Obrigado! Você está sendo direcionado para a plataforma VG Resíduos.");
+	
+	var url  = 'https://novo.vgresiduos.com.br/ra?name='+name+"&email="+email+"&stateId="+estadoGerador+"&cityId="+cidadeGerador+"&address="+enderecoGerador+"&residueId="+idresiduo+"&quantity="+quant+"&cnpj="+cnpjGerador;
+	
+	//alert(url);
+	window.location.replace(url);	
+}
+
+function redirect_tratador(){
+	var name2 = jQuery('#nome_tratador').val();
+	var email2 =  jQuery('#email_tratador').val();
+	var estadoTratador = jQuery('#estado_tratador').val();
+	var cidadeTratador = jQuery('#cidade_tratador').val();
+	var enderecoTratador = jQuery('#endereco_tratador').val();
+	var cnpjTratador = jQuery('#cnpj_tratador').val();
+
+	alert("Obrigado! Você está sendo direcionado para a plataforma VG Resíduos.");
+	
+	var url  = 'https://novo.vgresiduos.com.br/ra?name='+name2+"&email="+email2+"&stateId="+estadoTratador+"&cityId="+cidadeTratador+"&address="+enderecoTratador+"&cnpj="+cnpjTratador;
+	
+	//alert(url);
+	window.location.replace(url);
+}
+
+jQuery(document).ready(function() {
+	function setHeight() {
+	  windowHeight = jQuery(window).innerHeight();
+	  jQuery('#img-banner').css('min-height', windowHeight - '80');
+	};
+	setHeight();
+	
+	jQuery(window).resize(function() {
+	  setHeight();
+	});
+});
+
+document.addEventListener( 'wpcf7mailsent', function( event ) {
+    if ( '776' == event.detail.contactFormId ) {
+        redirect_gerador();
+    }
+}, false );
+
+document.addEventListener( 'wpcf7mailsent', function( event ) {
+    if ( '777' == event.detail.contactFormId ) {
+        redirect_tratador();
+    }
+}, false );
+
+jQuery( function() {	
+	jQuery.ajax({
+		url: 'https://apiv2.vgresiduos.com.br/api/LocationResource/GetStateListFromCountry',
+		type: 'POST',
+		headers: {'X-Requested-With': 'XMLHttpRequest'},
+		data: '1',
+		contentType: 'application/json; charset=utf-8',
+		success: function (result) {
+		jQuery.each(result.content.list, function(i, item){		
+			jQuery('#estado_gerador').append(jQuery('<option>', {
+				text : item.Description,
+				value : item.ID,
+			}));
+		});
+		}
+	});    
+});
+
+jQuery('#estado_gerador').on('change', function() {	
+	jQuery('#cidade_gerador').html("");
+	jQuery.ajax({
+		url: 'https://apiv2.vgresiduos.com.br/api/LocationResource/GetCityListFromState',
+		type: 'POST',
+		headers: {'X-Requested-With': 'XMLHttpRequest'},
+		data: this.value,
+		contentType: 'application/json; charset=utf-8',
+		success: function (result) {
+		jQuery.each(result.content.list, function(i, item){		
+			jQuery('#cidade_gerador').append(jQuery('<option>', {
+				text : item.Description,
+				value : item.ID,
+			}));
+		});
+		}
+	});    
+});
+
+jQuery( function() {	
+	jQuery.ajax({
+		url: 'https://apiv2.vgresiduos.com.br/api/LocationResource/GetStateListFromCountry',
+		type: 'POST',
+		headers: {'X-Requested-With': 'XMLHttpRequest'},
+		data: '1',
+		contentType: 'application/json; charset=utf-8',
+		success: function (result) {
+		jQuery.each(result.content.list, function(i, item){		
+			jQuery('#estado_tratador').append(jQuery('<option>', {
+				text : item.Description,
+				value : item.ID,
+			}));
+		});
+		}
+	});    
+});
+
+jQuery('#estado_tratador').on('change', function() {	
+	jQuery('#cidade_tratador').html("");
+	jQuery.ajax({
+		url: 'https://apiv2.vgresiduos.com.br/api/LocationResource/GetCityListFromState',
+		type: 'POST',
+		headers: {'X-Requested-With': 'XMLHttpRequest'},
+		data: this.value,
+		contentType: 'application/json; charset=utf-8',
+		success: function (result) {
+		jQuery.each(result.content.list, function(i, item){		
+			jQuery('#cidade_tratador').append(jQuery('<option>', {
+				text : item.Description,
+				value : item.ID,
+			}));
+		});
+		}
+	});    
+});
